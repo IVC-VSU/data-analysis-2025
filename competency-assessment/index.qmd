@@ -179,6 +179,21 @@ ggsave("plot/opportunity_seeking.jpeg", width = 12, height = 4, dpi = 300)
 knitr::include_graphics("plot/opportunity_seeking.jpeg")
 ```
 
+
+:::: {.callout-tip}
+## Interpretation
+
+- The individual exhibits a moderate level of Opportunity Seeking.
+
+- They are more inclined towards familiar activities and may require encouragement to step outside their comfort zone.
+
+- They are receptive to new challenges and opportunities, but may need additional motivation or support to pursue them actively.
+
+- They tend to identify and address tasks, but may not always take the initiative to act independently.
+
+::::
+
+
 ## Persistence
 
 ```{r}
@@ -192,6 +207,21 @@ ggsave("plot/persistence.jpeg", width = 10, height = 4, dpi = 300)
 knitr::include_graphics("plot/persistence.jpeg")
 
 ```
+
+:::: {.callout-tip}
+## Interpretation
+
+- The individual exhibits a moderate level of Persistence.
+
+- They are more likely to disengage from challenging situations rather than persist through them.
+
+- They are receptive to exploring different approaches to overcome obstacles, but may need additional motivation or support to maintain effort.
+
+- They tend to persist in influencing others, but may need to develop more effective strategies for persuasion and negotiation.
+
+::::
+
+
 
 ## Commitment to work contract
 
@@ -207,6 +237,21 @@ knitr::include_graphics("plot/commitment.jpeg")
 
 ```
 
+:::: {.callout-tip}
+## Interpretation
+
+- The individual exhibits a moderate level of Commitment.
+
+- They prioritize their personal life over work deadlines.
+
+- They are receptive to meeting deadlines and honoring commitments, but may need additional motivation or support to maintain consistency.
+
+- They are willing to assist others to meet deadlines, but may need to establish clear boundaries to avoid overcommitment.
+
+::::
+
+
+
 ## Demand for efficiency
 
 ```{r}
@@ -220,6 +265,21 @@ ggsave("plot/demand_for_efficiency.jpeg", width = 10, height = 4, dpi = 300)
 knitr::include_graphics("plot/demand_for_efficiency.jpeg")
 
 ```
+
+
+:::: {.callout-tip}
+## Interpretation
+
+- The individual exhibits a moderate level of Demand for Efficiency.
+
+- They value high-quality work and are bothered by inefficiency.
+
+- They are receptive to improving their own efficiency and finding better ways of doing things.
+
+- They may be more likely to identify areas for improvement and suggest alternative approaches.
+::::
+
+
 
 ## Risk taking
 
@@ -235,6 +295,21 @@ knitr::include_graphics("plot/risk_taking.jpeg")
 
 ```
 
+:::: {.callout-tip}
+## Interpretation
+
+- The individual exhibits a moderate level of Risk Taking.
+
+- They tend to avoid uncertainty and prefer situations with a high degree of control.
+
+- They are receptive to taking risks, but may need additional motivation or support to step outside their comfort zone.
+
+- They may benefit from strategies for managing uncertainty and developing a tolerance for ambiguity.
+
+::::
+
+
+
 ## Goal setting
 
 ```{r}
@@ -248,6 +323,21 @@ ggsave("plot/goal_setting.jpeg", width = 10, height = 4, dpi = 300)
 knitr::include_graphics("plot/goal_setting.jpeg")
 
 ```
+
+:::: {.callout-tip}
+## Interpretation
+
+- The individual exhibits a moderate level of Goal Setting.
+
+- They may benefit from developing a more structured approach to goal setting and planning.
+
+- They are receptive to considering future possibilities and setting goals, but may need additional motivation or support to maintain focus and commitment.
+
+- They may need to develop strategies for breaking down long-term goals into smaller, more manageable steps.
+
+::::
+
+
 
 ## Information seeking
 
@@ -263,6 +353,13 @@ knitr::include_graphics("plot/information_seeking.jpeg")
 
 ```
 
+:::: {.callout-tip}
+## Interpretation
+
+- 
+::::
+
+
 ## Systematic planning and monitoring
 
 ```{r}
@@ -276,6 +373,13 @@ ggsave("plot/systematic_planning_and_monitoring.jpeg", width = 10, height = 4, d
 knitr::include_graphics("plot/systematic_planning_and_monitoring.jpeg")
 
 ```
+
+
+:::: {.callout-tip}
+## Interpretation
+
+::::
+
 
 ## Persuasion and networking
 
@@ -291,6 +395,13 @@ knitr::include_graphics("plot/persuasion_and_networking.jpeg")
 
 ```
 
+:::: {.callout-tip}
+## Interpretation
+
+::::
+
+
+
 ## Self confidence
 
 ```{r}
@@ -304,3 +415,9 @@ ggsave("plot/self_confidence.jpeg", width = 10, height = 4, dpi = 300)
 knitr::include_graphics("plot/self_confidence.jpeg")
 
 ```
+
+:::: {.callout-tip}
+## Interpretation
+
+::::
+
