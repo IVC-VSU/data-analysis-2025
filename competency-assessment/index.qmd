@@ -1,0 +1,306 @@
+---
+title: "PECs self-rating"
+date: last-modified
+format: 
+  html:
+    css: custom.scss
+    self-contained: true
+    mainfont: arial
+    fontsize: 1em
+    linestretch: 1.5
+    toc: true
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    theme:
+      light: cosmo
+      dark: darkly
+execute:
+  message: false
+  warning: false
+  fig-align: center
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| echo: false
+
+# setting working directory
+setwd("C:/Users/chris/Documents/Github-repository/IVC-VSU-2025/data-analysis-2025/competency-assessment")
+
+# libararies
+library(tidyverse)
+library(readxl)
+library(EFAtools)
+library(reshape2)
+library(kableExtra)
+library(janitor)
+
+# importing data
+competency_dta <- 
+  read_excel("data/pecs-data.xlsx") |> 
+  clean_names()
+
+# data to long format
+
+# long format data
+competency_long_fmt_dta <- 
+  competency_dta |>  
+  pivot_longer(
+    cols = q1:q55,
+    names_to = "q_items",
+    values_to = "rating"
+  ) |> 
+  mutate(
+    factor = case_when(
+      q_items %in% c('q1', 'q12', 'q23', 'q34', 'q45') ~ "Opportunity seeking",
+      q_items %in% c('q2', 'q13', 'q24', 'q35', 'q46') ~ "Persistence",
+      q_items %in% c('q3', 'q14', 'q25', 'q36', 'q47') ~ "Commitment",
+      q_items %in% c('q4', 'q15', 'q26', 'q37', 'q48') ~ "Demand for efficiency",
+      q_items %in% c('q5', 'q16', 'q27', 'q38', 'q49') ~ "Risk taking",
+      q_items %in% c('q6', 'q17', 'q28', 'q39', 'q50') ~ "Goal setting",
+      q_items %in% c('q7', 'q18', 'q29', 'q40', 'q51') ~ "Information seeking",
+      q_items %in% c('q8', 'q19', 'q30', 'q41', 'q52') ~ "Systematic planning",
+      q_items %in% c('q9', 'q20', 'q31', 'q42', 'q53') ~ "Persuasion",
+      q_items %in% c('q10', 'q21', 'q32', 'q43', 'q54') ~ "Self-confidence",
+      TRUE ~ q_items
+    )
+  ) |> 
+  relocate(factor, .before = q_items) |> 
+  filter(!q_items %in% c('q11', 'q22', 'q33', 'q44', 'q55')) |> 
+  na.omit()
+
+## descriptions
+competency_description <- read_excel("data/pecs-data.xlsx", sheet = 2)
+
+## combining data
+competency_dta <- competency_long_fmt_dta |> 
+  left_join(competency_description, by = "q_items") |> 
+  mutate(description = str_wrap(description, width = 50))
+```
+
+# PEC summary
+
+```{r}
+plot_competency <- function(data, category) {
+  data |>
+    count(factor, description, rating) |>
+    na.omit() |>
+    group_by(description) |>
+    mutate(percent = n / sum(n) * 100) |>
+    ungroup() |>
+    filter(factor == category) |>
+    ggplot(aes(percent, description, fill = factor(rating))) +
+    geom_col(size = 1, width = 0.8) +
+    geom_text(
+      aes(label = round(percent, 0), x = percent, y = description),
+      position = position_stack(vjust = 0.5),
+      color = "white") +
+    scale_fill_manual(values = c("#2f3e46", "#3a5a40", "#588157", "#a3b18a", "#dad7cd"),
+                      labels = c("Always", "Usually", "Sometimes", "Rarely", "Never")) +
+    theme_minimal() +
+    theme(plot.margin = margin(rep(20, 4)),
+          plot.title = element_text(hjust = 0.5, size = 14, color = "gray20",
+                                    face = "bold", margin = margin(b = 20)),
+          plot.title.position = "plot",
+          panel.grid = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_text(margin = margin(t=10), size = 14),
+          axis.text = element_text(size = 12, color = "grey20"),
+          strip.text = element_text(size = 12, face = "bold"),
+          strip.clip = "off",
+          legend.position = "right",
+          legend.text = element_text(size = 12)) +
+    labs(fill = element_blank(),
+         title = category,
+         x = "Proportion")
+}
+
+```
+
+```{r}
+# summary of each competency
+p_competency_summary <- 
+  competency_long_fmt_dta |> 
+  count(factor, rating) |> 
+  na.omit() |> 
+  group_by(factor) |>
+  mutate(
+    percent = n / sum(n) * 100
+  ) |> 
+  ungroup() |>
+  mutate(rating = factor(rating, levels = c(1, 2, 3, 4, 5)),
+         rating = fct_rev(rating)) |>
+  ggplot(aes(percent, factor, fill = factor(rating))) +
+  geom_col(size = 1, width = 0.8) +
+  geom_text(
+    aes(label = round(percent, 0), x = percent, y = factor),
+    position = position_stack(vjust = 0.5),
+    color = "white") +
+  # scale_fill_manual(values = c("#500207", "#9f040e", "#e30613", "#fa4c58", "#fc9ca2"),
+  #                   labels = c("Always", "Usually", "Sometimes", "Rarely", "Never")) +
+  scale_fill_manual(values = c("#2f3e46", "#3a5a40", "#588157", "#a3b18a", "#dad7cd"),
+                    labels = c("Always", "Usually", "Sometimes", "Rarely", "Never")) +
+  theme_minimal() +
+  theme(plot.margin = margin(rep(20, 4)),
+        plot.title = element_text(hjust = 0.5, size = 14, color = "gray20",
+                                  face = "bold", margin = margin(b = 20)),
+        plot.title.position = "plot",
+        panel.grid = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_text(margin = margin(t=10), size = 14),
+        axis.text = element_text(size = 12, color = "grey20"),
+        strip.text = element_text(size = 12, face = "bold"),
+        strip.clip = "off",
+        legend.position = "right",
+        legend.text = element_text(size = 12)) +
+  labs(fill = element_blank(),
+       x = "Proportion")
+
+## save plot
+ggsave("plot/competency_summary.jpeg", width = 10, height = 6, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/competency_summary.jpeg")
+```
+
+## Opportunity seeking
+
+```{r}
+## opportunity seeking
+p_opportunity_seeking <- plot_competency(competency_dta, "Opportunity seeking")
+
+## save plot
+ggsave("plot/opportunity_seeking.jpeg", width = 12, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/opportunity_seeking.jpeg")
+```
+
+## Persistence
+
+```{r}
+## persistence
+p_persistence <- plot_competency(competency_dta, "Persistence")
+
+## save plot
+ggsave("plot/persistence.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/persistence.jpeg")
+
+```
+
+## Commitment to work contract
+
+```{r}
+## commitment to work contract
+p_commitment <- plot_competency(competency_dta, "Commitment")
+
+## save plot
+ggsave("plot/commitment.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/commitment.jpeg")
+
+```
+
+## Demand for efficiency
+
+```{r}
+## demand for efficiency
+p_efficiency <- plot_competency(competency_dta, "Demand for efficiency")
+
+## save plot
+ggsave("plot/demand_for_efficiency.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/demand_for_efficiency.jpeg")
+
+```
+
+## Risk taking
+
+```{r}
+## risk taking
+p_risk_taking <- plot_competency(competency_dta, "Risk taking")
+
+## save plot
+ggsave("plot/risk_taking.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/risk_taking.jpeg")
+
+```
+
+## Goal setting
+
+```{r}
+## goal setting
+p_goal_setting <- plot_competency(competency_dta, "Goal setting")
+
+## save plot
+ggsave("plot/goal_setting.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/goal_setting.jpeg")
+
+```
+
+## Information seeking
+
+```{r}
+## information seeking
+p_info_seeking <- plot_competency(competency_dta, "Information seeking")
+
+## save plot
+ggsave("plot/information_seeking.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/information_seeking.jpeg")
+
+```
+
+## Systematic planning and monitoring
+
+```{r}
+## systematic planning and monitoring
+p_systematic_planning <- plot_competency(competency_dta, "Systematic planning")
+
+## save plot
+ggsave("plot/systematic_planning_and_monitoring.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/systematic_planning_and_monitoring.jpeg")
+
+```
+
+## Persuasion and networking
+
+```{r}
+## persuasion and networking
+p_persuasion <- plot_competency(competency_dta, "Persuasion")
+
+## save plot
+ggsave("plot/persuasion_and_networking.jpeg", width = 10, height = 4, dpi = 300)
+
+## display plot
+knitr::include_graphics("plot/persuasion_and_networking.jpeg")
+
+```
+
+## Self confidence
+
+```{r}
+## self confidence
+p_self_confidence <- plot_competency(competency_dta, "Self-confidence")
+
+# save plot
+ggsave("plot/self_confidence.jpeg", width = 10, height = 4, dpi = 300)
+
+# display plot
+knitr::include_graphics("plot/self_confidence.jpeg")
+
+```
